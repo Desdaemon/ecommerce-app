@@ -1,96 +1,94 @@
-import { AppShell, Center, TextInput, Group, Button, Stack } from '@mantine/core'
-import { useForm } from '@mantine/hooks'
-import { useState, useRef } from 'react'
+import { AppShell, Center, TextInput, Button, Stack, InputWrapper, Header } from '@mantine/core';
+import { useForm } from '@mantine/hooks';
+import { GetStaticPaths } from 'next';
+import { useRouter } from 'next/router';
+import { useState } from 'react';
+import { ColorSchemeToggle } from '../components/ColorSchemeToggle/ColorSchemeToggle';
+import useUser from '../hooks/useUser';
+import { identity } from '../utils/common';
 
-async function handleLogin(body) {
-  const res = await fetch('/api/login', { 
-    method: 'POST',
-    body
-  })
-  alert(await res.text())
-}
-
-async function handleSignup(body) {
-  if (body.password !== body.confirmPassword) {
-    alert("Wrong Password")
-      
-  }
+const enum Action {
+  login,
+  signUp,
 }
 
 export default function Login() {
-  const [newUser, setNewUser] = useState(false)
-  const formRef = useRef()
+  const router = useRouter();
+  const [action, setAction] = useState(router.query.signup == '' ? Action.signUp : Action.login);
+  const [error, setError] = useState('');
+  const user = useUser();
   const form = useForm({
     initialValues: {
-      username: '',
+      identity: '',
       password: '',
       confirmPassword: '',
     },
-    validate: values => ({
-      confirmPassword: !newUser || values.password === values.confirmPassword
-        ? null
-        : 'Passwords do not match.'
-    })
-  })
-  
-  return (  
-    <AppShell>
-      <Center>
-        <form ref={formRef} onSubmit={form.onSubmit(
-            newUser ? handleSignup : handleLogin)}>
-          <TextInput
-            placeholder="Username"
-            label="Username"
-            required
-            {...form.getInputProps('username')} />
-          <TextInput
-            placeholder="Password"
-            label="Password"
-            type="password"
-            required
-            {...form.getInputProps('password')} />
-          {newUser && (
-            <TextInput
-              label="Confirm password"
-              type="password"
-              required
-              {...form.getInputProps('confirmPassword')} />
-          )}
-          <Stack sx={{ padding: '12px 0 0 0' }}>
-            <Button onClick={() => newUser 
-              ? setNewUser(false) : formRef.submit()}>Login</Button>
-            <Button onClick={() => !newUser
-                ? setNewUser(true) : formRef.submit()}>Sign up</Button>
-          </Stack>
-        </form>
-      </Center>
-    </AppShell>
-  )
-}
+    validationRules: {
+      identity: identity,
+      password: identity,
+      confirmPassword: (value, values) => action !== Action.signUp || value === values?.password,
+    },
+    errorMessages: {
+      identity: 'Username or email required',
+      password: 'Password required',
+      confirmPassword: 'Passwords do not match',
+    },
+  });
+  type FormValues = typeof form.values;
 
-function SignUp() {
+  function makeOnClick(_action: Action) {
+    return function () {
+      if (action !== _action) setAction(_action);
+    };
+  }
+
+  async function handleFormSubmit(values: FormValues) {
+    let err;
+    switch (action) {
+      case Action.login:
+        err = await user.login(values);
+        break;
+      case Action.signUp:
+        err = await user.signup({ username: values.identity, password: values.password });
+        break;
+    }
+    if (err) setError(err);
+    else router.push('/');
+  }
+
+  const newUser = action === Action.signUp;
+
   return (
-    <AppShell>
+    <AppShell
+      header={
+        <Header height="16">
+          <ColorSchemeToggle />
+        </Header>
+      }
+    >
       <Center>
-      {/* text field: username */}
-       <TextInput
-        placeholder="Username"
-        label="Username"
-        required />
-      {/* text field: password */}
-       <TextInput
-        placeholder="Password"
-        label="Password"
-        required />
-      {/* text field: confirm password */}
-      <TextInput
-        placeholder="ConfirmPassword"
-        label="ConfirmPassword"
-        required />
-      {/* actual button to confirm sign-in */}
-      <Button>Sign Up</Button>
+        <InputWrapper error={error}>
+          <form onSubmit={form.onSubmit(handleFormSubmit)}>
+            <TextInput label="Username or email" {...form.getInputProps('identity')} />
+            <TextInput label="Password" type="password" {...form.getInputProps('password')} />
+            {newUser && (
+              <TextInput
+                label="Confirm password"
+                type="password"
+                {...form.getInputProps('confirmPassword')}
+              />
+            )}
+            <Stack sx={{ paddingTop: 12 }}>
+              <Button type={newUser ? undefined : 'submit'} onClick={makeOnClick(Action.login)}>
+                Login
+              </Button>
+              <Button type={newUser ? 'submit' : undefined} onClick={makeOnClick(Action.signUp)}>
+                Sign up
+              </Button>
+            </Stack>
+          </form>
+        </InputWrapper>
       </Center>
     </AppShell>
-  )
-
+  );
 }
