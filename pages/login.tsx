@@ -1,4 +1,13 @@
-import { AppShell, Center, TextInput, Button, Stack, InputWrapper, Header } from '@mantine/core';
+import {
+  AppShell,
+  Card,
+  Center,
+  TextInput,
+  Button,
+  Stack,
+  InputWrapper,
+  Header,
+} from '@mantine/core';
 import { useForm } from '@mantine/hooks';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
@@ -60,33 +69,35 @@ export default function Login() {
   return (
     <AppShell
       header={
-        <Header height="16">
+        <Header height="70">
           <ColorSchemeToggle />
         </Header>
       }
     >
       <Center>
-        <InputWrapper error={error}>
-          <form onSubmit={form.onSubmit(handleFormSubmit)}>
-            <TextInput label="Username or email" {...form.getInputProps('identity')} />
-            <TextInput label="Password" type="password" {...form.getInputProps('password')} />
-            {newUser && (
-              <TextInput
-                label="Confirm password"
-                type="password"
-                {...form.getInputProps('confirmPassword')}
-              />
-            )}
-            <Stack sx={{ paddingTop: 12 }}>
-              <Button type={newUser ? undefined : 'submit'} onClick={makeOnClick(Action.login)}>
-                Login
-              </Button>
-              <Button type={newUser ? 'submit' : undefined} onClick={makeOnClick(Action.signUp)}>
-                Sign up
-              </Button>
-            </Stack>
-          </form>
-        </InputWrapper>
+        <Card>
+          <InputWrapper error={error}>
+            <form onSubmit={form.onSubmit(handleFormSubmit)}>
+              <TextInput label="Username or email" {...form.getInputProps('identity')} />
+              <TextInput label="Password" type="password" {...form.getInputProps('password')} />
+              {newUser && (
+                <TextInput
+                  label="Confirm password"
+                  type="password"
+                  {...form.getInputProps('confirmPassword')}
+                />
+              )}
+              <Stack sx={{ paddingTop: 12 }}>
+                <Button type={newUser ? undefined : 'submit'} onClick={makeOnClick(Action.login)}>
+                  Login
+                </Button>
+                <Button type={newUser ? 'submit' : undefined} onClick={makeOnClick(Action.signUp)}>
+                  Sign up
+                </Button>
+              </Stack>
+            </form>
+          </InputWrapper>
+        </Card>
       </Center>
     </AppShell>
   );

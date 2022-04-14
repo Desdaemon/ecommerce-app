@@ -1,5 +1,6 @@
 /** Utilities for the server only. */
 
+import 'dotenv/config';
 import Database from 'better-sqlite3';
 import { openSync, readFileSync, closeSync } from 'fs';
 import { IronSessionOptions } from 'iron-session';
@@ -32,7 +33,7 @@ export const enum HttpStatus {
 
 const sessionOptions: IronSessionOptions = {
   password: process.env.SECRET_COOKIE_PASSWORD as string,
-  cookieName: 'foo-bar-baz',
+  cookieName: 'ecommerce-app',
   cookieOptions: {
     secure: process.env.NODE_ENV === 'production',
   },
