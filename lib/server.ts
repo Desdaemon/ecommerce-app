@@ -2,6 +2,9 @@
 
 import Database from 'better-sqlite3';
 import { openSync, readFileSync, closeSync } from 'fs';
+import { IronSessionOptions } from 'iron-session';
+import { withIronSessionApiRoute } from 'iron-session/next';
+import type { NextApiRequest, NextApiResponse } from 'next';
 
 const db = process.env.NODE_ENV === 'development' ? prepareDatabase() : Database('database.db');
 export default db;
@@ -25,4 +28,16 @@ export const enum HttpStatus {
   unprocessableEntity = 422,
   internalError = 500,
   notImplemented = 501,
+}
+
+const sessionOptions: IronSessionOptions = {
+  password: process.env.SECRET_COOKIE_PASSWORD as string,
+  cookieName: 'foo-bar-baz',
+  cookieOptions: {
+    secure: process.env.NODE_ENV === 'production',
+  },
+};
+
+export function secureEndpoint(fn: (req: NextApiRequest, res: NextApiResponse) => any) {
+  return withIronSessionApiRoute(fn, sessionOptions);
 }

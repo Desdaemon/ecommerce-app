@@ -1,6 +1,5 @@
 import { Endpoint } from '../../lib/types';
-import db, { HttpStatus } from '../../lib/server';
-import { secureEndpoint } from '../../lib/client';
+import db, { HttpStatus, secureEndpoint } from '../../lib/server';
 
 const login = db
   .prepare<[string, string, string]>(

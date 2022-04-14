@@ -1,5 +1,4 @@
-import { secureEndpoint } from '../../lib/client';
-import db, { HttpStatus } from '../../lib/server';
+import db, { HttpStatus, secureEndpoint } from '../../lib/server';
 
 const signup = db
   .prepare<[string, string, string]>(
