@@ -1,11 +1,10 @@
 import { AppShell, Center, TextInput, Button, Stack, InputWrapper, Header } from '@mantine/core';
 import { useForm } from '@mantine/hooks';
-import { GetStaticPaths } from 'next';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { ColorSchemeToggle } from '../components/ColorSchemeToggle/ColorSchemeToggle';
 import useUser from '../hooks/useUser';
-import { identity } from '../utils/common';
+import { identity } from '../lib/common';
 
 const enum Action {
   login,

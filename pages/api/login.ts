@@ -1,5 +1,6 @@
-import { Endpoint } from '../../utils/types';
-import db, { HttpStatus } from '../../utils/server';
+import { Endpoint } from '../../lib/types';
+import db, { HttpStatus } from '../../lib/server';
+import { secureEndpoint } from '../../lib/client';
 
 const login = db
   .prepare<[string, string, string]>(
@@ -17,14 +18,17 @@ const vendorLogin = db
   )
   .pluck();
 
-export default (function (req, res) {
+export default secureEndpoint(async (req, res) => {
   if (req.method === 'POST' && req.body && req.body.identity && req.body.password) {
     const stmt = req.query.vendor == '' ? vendorLogin : login;
     const { identity, password } = req.body;
     const userId = stmt.get(identity, identity, password);
-    return userId
-      ? res.status(HttpStatus.ok).send(userId)
-      : res.status(HttpStatus.unauthorized).send('Invalid username, email or password.');
+    if (userId) {
+      req.session.user = { userId };
+      await req.session.save();
+      return res.status(HttpStatus.ok).send(userId);
+    }
+    return res.status(HttpStatus.unauthorized).send('Invalid username, email or password.');
   }
   res.status(HttpStatus.unprocessableEntity).send('');
-} as Endpoint);
+});

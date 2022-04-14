@@ -1,6 +1,6 @@
 import create from 'zustand';
 import { persist } from 'zustand/middleware';
-import { fetchJson } from '../utils/client';
+import { fetchJson } from '../lib/client';
 
 const useUser = create(
   persist(
