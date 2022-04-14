@@ -41,3 +41,11 @@ const sessionOptions: IronSessionOptions = {
 export function secureEndpoint(fn: (req: NextApiRequest, res: NextApiResponse) => any) {
   return withIronSessionApiRoute(fn, sessionOptions);
 }
+
+declare module 'iron-session' {
+  interface IronSessionData {
+    user?: {
+      userId: string;
+    };
+  }
+}

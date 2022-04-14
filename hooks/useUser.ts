@@ -27,7 +27,7 @@ const useUser = create(
         signup: template<{ username: string; password: string; email?: string }>('/api/signup'),
       };
     },
-    { name: 'user' }
+    { name: 'user-state' }
   )
 );
 
