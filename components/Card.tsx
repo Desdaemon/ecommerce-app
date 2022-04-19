@@ -26,7 +26,7 @@ export function CardItem({ id, link, description, name }: Props) {
           <Badge color="pink" variant="light">
             On Sale
           </Badge>
-        </Group>
+        </Group>x
 
         <Text size="sm" style={{ color: secondaryColor, lineHeight: 1.5 }}>
           {description}

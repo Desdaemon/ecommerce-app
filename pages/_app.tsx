@@ -20,6 +20,7 @@ interface InitialProps {
 const headerLinks = [
   { title: 'Home', url: '/' },
   { title: 'Cart', url: '/cart' },
+  {title: 'Orders', url: '/orders'},
 ];
 
 const footerLinks = [

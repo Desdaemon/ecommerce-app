@@ -1,7 +1,8 @@
 import CartItem from '@/components/CartItem';
 import db, { secureSession } from '@/lib/server';
 import { PageProps } from '@/lib/types';
-import { Center, Stack } from '@mantine/core';
+import { Button, Center, Stack } from '@mantine/core';
+import { useRouter } from 'next/router';
 
 interface CartPageProps extends PageProps {
   items: CartItem[];
@@ -35,10 +36,22 @@ export const getServerSideProps = secureSession<CartPageProps>(async ({ req }) =
 });
 
 export default function CartPage({ items, user }: CartPageProps) {
+  const router = useRouter()
   if (!user) return <Center>Log in to view your shopping cart.</Center>;
   return items.length ? (
-    <Stack align="center">{items.map(CartItem)}</Stack>
+    <>
+      <Stack align="center">{items.map(CartItem)}</Stack>
+      <Button 
+        style={{width:"200px", float: "right"}}
+        onClick={async () => {
+          await fetch("/api/buy");
+          router.reload();
+        }}
+      >
+        Buy
+      </Button>
+    </>
   ) : (
-    'Items added to your cart will show up here.'
+    <h1 style={{ textAlign: 'center'}}>{"Your cart is empty!"}</h1>
   );
 }
