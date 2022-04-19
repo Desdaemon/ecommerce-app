@@ -17,14 +17,14 @@ export interface CartItem {
 const listingStmt = db.prepare<[string]>(
   `--sql
   select C.qty, L.name, L.price, LI.url
-  from Cart C
+  from Purchase C
   inner join Listing L
   on
     L.listing_id = C.listing_id
   left outer join ListingImages LI
   on
     L.listing_id = LI.listing_id
-  where C.buyer_id = ?`
+  where C.buyer_id = ? and C.status = 'cart'`
 );
 
 export const getServerSideProps = secureSession<CartPageProps>(async ({ req }) => {

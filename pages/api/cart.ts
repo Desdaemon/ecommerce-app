@@ -2,7 +2,7 @@ import db, { HttpStatus, secureEndpoint } from '@/lib/server';
 
 const upsertCart = db.prepare<{ buyerId: string; listingId: string; qty: number }>(
   `--sql
-  insert into Cart (buyer_id, listing_id, qty)
+  insert into Purchase (buyer_id, listing_id, qty)
     values (@buyerId, @listingId, @qty)
   on conflict (buyer_id, listing_id) do
     update set qty = qty + @qty
