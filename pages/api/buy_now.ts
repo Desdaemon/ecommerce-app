@@ -1,26 +1,18 @@
 import db, { HttpStatus, secureEndpoint } from '@/lib/server';
 
-const buyStmt = db.prepare<[string]>(
+const buyNow = db.prepare<[string, string, number]>(
   `--sql
   insert into Purchase (buyer_id, listing_id, qty)
-  select buyer_id, listing_id, qty
-  from Cart
-  where buyer_id = ?`
-);
-
-const emptyStmt = db.prepare<[string]>(
-  `--sql
-  delete from Cart
-  where buyer_id = ?`
+  values (?, ?, ?)`
 );
 
 export default secureEndpoint(async (req, res) => {
-  if (!req.session.user) {
+  if (!(req.session.user && req.body.id)) {
     return res.status(HttpStatus.unprocessableEntity).end();
   }
+  const { id, qty } = req.body;
   try {
-    buyStmt.run(req.session.user.userId);
-    emptyStmt.run(req.session.user.userId);
+    buyNow.run(req.session.user.userId, id, qty ?? 1);
     return res.status(HttpStatus.noContent).end();
   } catch (err) {
     console.error(err);

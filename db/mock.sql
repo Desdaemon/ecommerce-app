@@ -32,8 +32,12 @@ insert into ListingImages (listing_id, url) values
     (7, 'https://i.ebayimg.com/images/g/QIMAAOSwIttiOyuQ/s-l1600.jpg'),
     (8, 'https://m.media-amazon.com/images/I/61WufZsG7rL._AC_SL1500_.jpg');
 
-insert into Purchase (buyer_id, listing_id, qty) values
+insert into Cart (buyer_id, listing_id, qty) values
     (1, 1, 1),
     (1, 2, 2),
     (1, 3, 2),
     (1, 4, 1);
+
+insert into Purchase (buyer_id, listing_id, qty) values
+    (1, 1, 1),
+    (1, 2, 10);

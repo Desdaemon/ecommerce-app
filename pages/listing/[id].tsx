@@ -4,6 +4,7 @@ import db from '@/lib/server';
 import { PageProps } from '@/lib/types';
 import { fetchJson, useFlags } from '@/lib/client';
 import { showNotification } from '@mantine/notifications';
+import Router, { useRouter } from 'next/router';
 
 export interface ListingInfo {
   id: string;
@@ -57,6 +58,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
 
 export default function Listing({ info, user }: ListingProps) {
   const { setFlags } = useFlags();
+  const router = useRouter();
   async function onClick() {
     const res = await fetchJson('/api/cart', info, { method: 'POST' });
     if (res.status < 400) {
@@ -71,6 +73,17 @@ export default function Listing({ info, user }: ListingProps) {
       message: res.statusText,
       color: 'red',
     });
+  }
+  async function buyNow() {
+    const res = await fetchJson('/api/buy_now', { id: info.id, qty: 1 }, { method: 'POST' });
+    if (res.status > 400) {
+      return showNotification({
+        title: 'Item coud not be added',
+        message: res.statusText,
+        color: 'red',
+      });
+    }
+    router.push('/orders');
   }
   return (
     <Center>
@@ -90,7 +103,7 @@ export default function Listing({ info, user }: ListingProps) {
           <Group>
             {user ? (
               <>
-                <Button color="green" disabled>
+                <Button color="green" onClick={buyNow}>
                   Buy now
                 </Button>
                 <Button onClick={onClick}>Add to cart</Button>

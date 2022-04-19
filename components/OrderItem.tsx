@@ -1,34 +1,35 @@
 import type { Item } from '@/pages/orders';
 import { Card, Text, Stack, Group, Image, Badge, Button } from '@mantine/core';
 
-function timeSince(date : string) : string {
-    var seconds = Math.floor((new Date().valueOf() - Date.parse(date).valueOf()) / 1000);
-  
-    var interval = seconds / 31536000;
-  
-    if (interval > 1) {
-      return Math.floor(interval) + " years";
-    }
-    interval = seconds / 2592000;
-    if (interval > 1) {
-      return Math.floor(interval) + " months";
-    }
-    interval = seconds / 86400;
-    if (interval > 1) {
-      return Math.floor(interval) + " days";
-    }
-    interval = seconds / 3600;
-    if (interval > 1) {
-      return Math.floor(interval) + " hours";
-    }
-    interval = seconds / 60;
-    if (interval > 1) {
-      return Math.floor(interval) + " minutes";
-    }
-    return Math.floor(seconds) + " seconds";
+function timeSince(date: string): string {
+  var seconds = Math.floor((new Date(date).valueOf() - Date.now()) / 1000);
+
+  var interval = seconds / 31536000;
+
+  if (interval > 1) {
+    return Math.floor(interval) + ' years';
   }
+  interval = seconds / 2592000;
+  if (interval > 1) {
+    return Math.floor(interval) + ' months';
+  }
+  interval = seconds / 86400;
+  if (interval > 1) {
+    return Math.floor(interval) + ' days';
+  }
+  interval = seconds / 3600;
+  if (interval > 1) {
+    return Math.floor(interval) + ' hours';
+  }
+  interval = seconds / 60;
+  if (interval > 1) {
+    return Math.floor(interval) + ' minutes';
+  }
+  return Math.floor(seconds) + ' seconds';
+}
 
 export default function CartListItem(props: Item) {
+  console.log({ props });
   return (
     <Card sx={{ maxWidth: 1080, width: '100%' }}>
       <Card.Section>

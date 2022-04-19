@@ -18,14 +18,14 @@ export interface CartItem {
 const listingStmt = db.prepare<[string]>(
   `--sql
   select C.qty, L.name, L.price, LI.url
-  from Purchase C
+  from Cart C
   inner join Listing L
   on
     L.listing_id = C.listing_id
   left outer join ListingImages LI
   on
     L.listing_id = LI.listing_id
-  where C.buyer_id = ? and C.status = 'cart'`
+  where C.buyer_id = ?`
 );
 
 export const getServerSideProps = secureSession<CartPageProps>(async ({ req }) => {
@@ -36,22 +36,25 @@ export const getServerSideProps = secureSession<CartPageProps>(async ({ req }) =
 });
 
 export default function CartPage({ items, user }: CartPageProps) {
-  const router = useRouter()
+  const router = useRouter();
   if (!user) return <Center>Log in to view your shopping cart.</Center>;
   return items.length ? (
     <>
       <Stack align="center">{items.map(CartItem)}</Stack>
-      <Button 
-        style={{width:"200px", float: "right"}}
+      <Button
+        style={{ width: '200px', float: 'right' }}
         onClick={async () => {
-          await fetch("/api/buy");
-          router.reload();
+          const res = await fetch('/api/buy');
+          if (res.status > 400) {
+            console.error(await res.text());
+          }
+          router.push('/orders');
         }}
       >
         Buy
       </Button>
     </>
   ) : (
-    <h1 style={{ textAlign: 'center'}}>{"Your cart is empty!"}</h1>
+    <h1 style={{ textAlign: 'center' }}>{'Your cart is empty!'}</h1>
   );
 }

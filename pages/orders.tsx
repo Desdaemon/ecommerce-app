@@ -17,8 +17,8 @@ export interface Item {
 
 const listingStmt = db.prepare<[string]>(
   `--sql
-  select C.qty, L.name, L.price, LI.url
-  from Cart C
+  select C.qty, L.name, L.price, LI.url, C.date
+  from Purchase C
   inner join Listing L
   on
     L.listing_id = C.listing_id
@@ -40,6 +40,6 @@ export default function CartPage({ items, user }: OrderPageProps) {
   return items.length ? (
     <Stack align="center">{items.map(OrderItem)}</Stack>
   ) : (
-    <h1 style={{ textAlign: 'center'}}>{"Your orders history is empty!"}</h1>
+    <h1 style={{ textAlign: 'center' }}>{'Your orders history is empty!'}</h1>
   );
 }
