@@ -29,8 +29,9 @@ create table Listing (
 
 create table Payment (
     buyer_id integer not null,
+    name varchar,
     card_no char(16) not null,
-    expiry char(4) not null,
+    expiry char(5) not null,
     cvc char(3) not null,
     primary key (buyer_id, card_no),
     foreign key (buyer_id) references Buyer(buyer_id)

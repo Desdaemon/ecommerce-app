@@ -41,3 +41,6 @@ insert into Cart (buyer_id, listing_id, qty) values
 insert into Purchase (buyer_id, listing_id, qty) values
     (1, 1, 1),
     (1, 2, 10);
+
+insert into Payment (buyer_id, name, card_no, expiry, cvc) values
+    (1, 'blah', '7382819283728192', '12/12', '123');
