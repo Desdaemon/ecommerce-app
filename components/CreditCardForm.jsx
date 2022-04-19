@@ -12,7 +12,7 @@ import { handleNumbersOnly } from '../lib/utils';
 import { fetchJson } from '../lib/client';
 import { useRouter } from 'next/router';
 
-const Homepage = () => {
+const CreditCardForm = () => {
   const router = useRouter();
   const [contact, setContact] = useState({
     name: '',
@@ -84,10 +84,12 @@ const Homepage = () => {
   // Form onSubmit handler
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     if (handleValidation()) {
       const res = await fetchJson('/api/payment', contact, { method: 'POST' });
-      if (res.status < 400) router.refresh();
+      if (res.status < 400){
+        router.reload();
+      }
     }
   };
 
@@ -159,4 +161,4 @@ const Homepage = () => {
   );
 };
 
-export default Homepage;
+export default CreditCardForm;

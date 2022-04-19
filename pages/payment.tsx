@@ -2,7 +2,7 @@ import PaymentItem from '@/components/PaymentItem';
 import db, { secureSession } from '@/lib/server';
 import { PageProps } from '@/lib/types';
 import { Center, Stack } from '@mantine/core';
-import CardPaymentForm from '@/components/CreditCardForm';
+import CreditCardForm from '@/components/CreditCardForm';
 
 const payments = db.prepare<[string]>(
   `--sql
@@ -29,6 +29,6 @@ export default function PaymentPage({ items, user }: PaymentPageProps) {
       {items.map(PaymentItem)}
     </Stack>
   ) : (
-    <CardPaymentForm />
+    <CreditCardForm />
   );
 }
