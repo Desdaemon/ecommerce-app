@@ -28,10 +28,10 @@ create table Listing (
 );
 
 create table Payment (
-    buyer_id integer,
-    card_no char(16),
-    expiry char(4),
-    cvc char(3),
+    buyer_id integer not null,
+    card_no char(16) not null,
+    expiry char(4) not null,
+    cvc char(3) not null,
     primary key (buyer_id, card_no),
     foreign key (buyer_id) references Buyer(buyer_id)
         on update cascade on delete cascade
@@ -40,31 +40,22 @@ create table Payment (
 -- Relationships
 
 create table Purchase (
+    status varchar not null default 'cart'
+        check (status in ('cart', 'order')),
     buyer_id integer,
-    vendor_id integer,
+    -- vendor_id integer,
     listing_id integer,
     card_no char(16),
-    date char(8),
-    primary key (buyer_id, vendor_id, listing_id),
-    foreign key (buyer_id) references Buyer(buyer_id)
-        on update cascade on delete cascade,
-    foreign key (listing_id) references Listing(listing_id)
-        on update cascade on delete cascade,
-    foreign key (vendor_id) references Vendor(vendor_id)
-        on update cascade on delete cascade
-);
-
-create table Cart (
-    buyer_id integer not null,
-    card_no char(16),
-    listing_id integer not null,
+    date datetime not null default current_timestamp,
+    order_date datetime,
     qty integer not null check (qty > 0),
-    date char(8),
     primary key (buyer_id, listing_id),
     foreign key (buyer_id) references Buyer(buyer_id)
         on update cascade on delete cascade,
     foreign key (listing_id) references Listing(listing_id)
         on update cascade on delete cascade
+    -- foreign key (vendor_id) references Vendor(vendor_id)
+    --     on update cascade on delete cascade
 );
 
 create table ListingImages (
