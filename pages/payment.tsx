@@ -6,7 +6,12 @@ import CreditCardForm from '@/components/CreditCardForm';
 
 const payments = db.prepare<[string]>(
   `--sql
-  select * from Payment where buyer_id = ?`
+  select *, (P.card_no == B.default_card_no) as isDefault
+  from Payment P
+  inner join Buyer B
+  on
+    B.buyer_id = P.buyer_id
+  where P.buyer_id = ?`
 );
 
 interface PaymentPageProps extends PageProps {

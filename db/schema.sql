@@ -6,7 +6,8 @@ create table Buyer (
     buyer_id integer primary key autoincrement,
     email varchar unique,
     username varchar unique not null,
-    password varchar not null
+    password varchar not null,
+    default_card_no varchar
 );
 
 create table Vendor (
@@ -30,9 +31,9 @@ create table Listing (
 create table Payment (
     buyer_id integer not null,
     name varchar,
-    card_no char(16) not null,
-    expiry char(5) not null,
-    cvc varchar(4) not null,
+    card_no varchar not null,
+    expiry varchar not null,
+    cvc varchar not null,
     primary key (buyer_id, card_no),
     foreign key (buyer_id) references Buyer(buyer_id)
         on update cascade on delete cascade

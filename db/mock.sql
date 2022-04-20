@@ -43,4 +43,8 @@ insert into Purchase (buyer_id, listing_id, qty) values
     (1, 2, 10);
 
 insert into Payment (buyer_id, name, card_no, expiry, cvc) values
-    (1, 'blah', '7382819283728192', '12/12', '123');
+    (1, 'blah', '1234 1234 1234 1234', '12/12', '123'),
+    (1, 'blu', '3498 3498 3498 3498', '13/13', '123');
+
+-- update foo's default payment to be this
+update Buyer set default_card_no = '1234 1234 1234 1234' where buyer_id = 1;
