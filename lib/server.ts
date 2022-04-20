@@ -35,9 +35,10 @@ function prepareDatabase(path = 'test.db'): Database.Database {
 }
 
 function prepareProductionDatabase(path = 'database.db') {
+  if (global.db_) return global.db_;
   const dbpath = process.env.DB || path;
   const exists = dbpath !== ':memory:' && existsSync(dbpath);
-  const db = Database(dbpath);
+  const db = (global.db_ = Database(dbpath));
   if (!exists) {
     db.exec(schemaFile);
     db.exec(mockFile);
