@@ -12,6 +12,10 @@ const config = {
     Object.assign(config.resolve.alias, {
       '@': __dirname,
     });
+    Object.assign(config.module.rules, []).push({
+      test: /\.sql$/,
+      use: 'raw-loader',
+    });
     return config;
   },
 };

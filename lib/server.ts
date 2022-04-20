@@ -12,8 +12,10 @@ import type {
 import { UserSession } from './types';
 import { IronSessionOptions } from 'iron-session';
 import { assertTruthy } from './common';
+import schemaFile from '@/db/schema.sql';
+import mockFile from '@/db/mock.sql';
 
-const schemaPath = process.env.SCHEMA || 'db/schema.sql';
+// const schemaPath = process.env.SCHEMA || 'db/schema.sql';
 const db = process.env.NODE_ENV === 'development' ? prepareDatabase() : prepareProductionDatabase();
 export default db;
 
@@ -27,18 +29,18 @@ function prepareDatabase(path = 'test.db'): Database.Database {
   if (path !== ':memory:') closeSync(openSync(path, 'w'));
 
   const db = (global.db_ = Database(path));
-  for (const path of [schemaPath, 'db/mock.sql']) {
-    db.exec(readFileSync(path).toString());
-  }
+  db.exec(schemaFile);
+  db.exec(mockFile);
   return db;
 }
 
 function prepareProductionDatabase(path = 'database.db') {
   const dbpath = process.env.DB || path;
-  const exists = existsSync(dbpath);
+  const exists = dbpath !== ':memory:' && existsSync(dbpath);
   const db = Database(dbpath);
   if (!exists) {
-    db.exec(readFileSync(schemaPath).toString());
+    db.exec(schemaFile);
+    db.exec(mockFile);
   }
   return db;
 }
