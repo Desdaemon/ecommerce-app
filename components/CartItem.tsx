@@ -1,7 +1,12 @@
+import { fetchJson } from '@/lib/client';
 import type { CartItem } from '@/pages/cart';
 import { Card, Text, Stack, Group, Image, Badge, Button } from '@mantine/core';
 
 export default function CartListItem(props: CartItem) {
+  async function removeItem() {
+    await fetchJson('/api/cart', { id: props.id }, { method: 'DELETE' });
+    location.reload();
+  }
   return (
     <Card sx={{ maxWidth: 1080, width: '100%' }}>
       <Card.Section>
@@ -11,7 +16,9 @@ export default function CartListItem(props: CartItem) {
             <Text size="lg">{props.name}</Text>
             <Badge>in stock</Badge>
             <Text size="sm">Qty: {props.qty}</Text>
-            <Button color="red">Remove Item</Button>
+            <Button color="red" onClick={removeItem}>
+              Remove Item
+            </Button>
           </Stack>
         </Group>
       </Card.Section>

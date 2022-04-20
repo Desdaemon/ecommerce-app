@@ -9,6 +9,7 @@ interface CartPageProps extends PageProps {
 }
 
 export interface CartItem {
+  id: string;
   qty: number;
   name: string;
   price: number;
@@ -17,7 +18,8 @@ export interface CartItem {
 
 const listingStmt = db.prepare<[string]>(
   `--sql
-  select C.qty, L.name, L.price, LI.url
+  select C.qty, L.name, L.price, LI.url,
+         L.listing_id as id
   from Cart C
   inner join Listing L
   on

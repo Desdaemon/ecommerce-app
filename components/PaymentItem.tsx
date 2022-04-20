@@ -1,12 +1,10 @@
 import { fetchJson } from '@/lib/client';
 import { Card, Text, Stack, Group, Badge, Button } from '@mantine/core';
-import { useRouter } from 'next/router';
 
 export default function PaymentItem(props: any) {
-  const router = useRouter();
   async function makeDefault() {
     await fetchJson('/api/default_payment', { cardNo: props.card_no }, { method: 'POST' });
-    router.reload();
+    location.reload();
   }
   return (
     <Card sx={{ maxWidth: 1080, width: '100%' }}>

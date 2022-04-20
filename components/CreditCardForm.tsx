@@ -1,7 +1,6 @@
 import { Center, Group as Row, Card, Button, TextInput as InputField } from '@mantine/core';
 
 import { fetchJson } from '@/lib/client';
-import { useRouter } from 'next/router';
 import { useForm } from '@mantine/hooks';
 import InputMask from 'react-input-mask';
 
@@ -16,7 +15,6 @@ Number.prototype.between = function between(min, max) {
 };
 
 const CreditCardForm = () => {
-  const router = useRouter();
   const form = useForm({
     initialValues: {
       name: '',
@@ -43,7 +41,7 @@ const CreditCardForm = () => {
     if (form.validate()) {
       const res = await fetchJson('/api/payment', values, { method: 'POST' });
       if (res.status < 400) {
-        router.reload();
+        location.reload();
       }
     }
   };

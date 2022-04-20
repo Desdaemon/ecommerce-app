@@ -111,7 +111,7 @@ export default function AppHeader({ user, tabs }: HeaderTabsProps) {
 
   async function logout() {
     await fetch('/api/logout');
-    router.reload();
+    location.reload();
   }
 
   const active = tabs.findIndex((tab) => router.pathname === tab.url);

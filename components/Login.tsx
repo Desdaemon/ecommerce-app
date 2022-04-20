@@ -1,20 +1,9 @@
-import {
-  // AppShell,
-  // Card,
-  // Center,
-  TextInput,
-  Button,
-  Stack,
-  InputWrapper,
-  // Header,
-} from '@mantine/core';
+import { TextInput, Button, Stack, InputWrapper } from '@mantine/core';
 import { useForm } from '@mantine/hooks';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
-// import { ColorSchemeToggle } from '@/components/ColorSchemeToggle/ColorSchemeToggle';
 import { fetchJson, useLoading } from '@/lib/client';
 import { identity } from '@/lib/common';
-import { secureSession } from '@/lib/server';
 import type { Login, Signup } from '@/lib/types';
 
 const enum Action {
@@ -101,7 +90,7 @@ export default function LoginPage({ nextRoute }: LoginPageProps) {
     if (err) {
       setError(err.message);
     } else if (!nextRoute || nextRoute === router.pathname) {
-      router.reload();
+      location.reload();
     } else {
       router.push(nextRoute);
     }
