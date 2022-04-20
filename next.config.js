@@ -2,15 +2,18 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
   enabled: process.env.ANALYZE === 'true',
 });
 
-module.exports = withBundleAnalyzer({
+/** @type {import('next').NextConfig} */
+const config = {
   reactStrictMode: true,
   eslint: {
     ignoreDuringBuilds: true,
   },
-  webpack(config, options) {
+  webpack(config, _options) {
     Object.assign(config.resolve.alias, {
       '@': __dirname,
     });
     return config;
   },
-});
+};
+
+module.exports = withBundleAnalyzer(config);

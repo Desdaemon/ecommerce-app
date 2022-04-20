@@ -29,7 +29,6 @@ function timeSince(date: string): string {
 }
 
 export default function CartListItem(props: Item) {
-  console.log({ props });
   return (
     <Card sx={{ maxWidth: 1080, width: '100%' }}>
       <Card.Section>

@@ -25,7 +25,8 @@ const listingStmt = db.prepare<[string]>(
   left outer join ListingImages LI
   on
     L.listing_id = LI.listing_id
-  where C.buyer_id = ?`
+  where C.buyer_id = ?
+  order by date asc`
 );
 
 export const getServerSideProps = secureSession<OrderPageProps>(async ({ req }) => {

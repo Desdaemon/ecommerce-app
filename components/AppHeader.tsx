@@ -115,14 +115,7 @@ export default function AppHeader({ user, tabs }: HeaderTabsProps) {
   }
 
   const active = tabs.findIndex((tab) => router.pathname === tab.url);
-  const items = tabs.map((tab, index) => (
-    <Tabs.Tab
-      key={tab.title}
-      label={
-        <div onClick={index === active ? undefined : () => router.push(tab.url)}>{tab.title}</div>
-      }
-    />
-  ));
+  const items = tabs.map((tab) => <Tabs.Tab key={tab.title} label={tab.title} />);
 
   return (
     <div className={classes.header}>
@@ -204,6 +197,9 @@ export default function AppHeader({ user, tabs }: HeaderTabsProps) {
         <Tabs
           variant="outline"
           active={active}
+          onTabChange={(idx) => {
+            router.push(tabs[idx].url);
+          }}
           classNames={{
             root: classes.tabs,
             tabsListWrapper: classes.tabsList,

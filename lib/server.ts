@@ -17,10 +17,16 @@ const schemaPath = process.env.SCHEMA || 'db/schema.sql';
 const db = process.env.NODE_ENV === 'development' ? prepareDatabase() : prepareProductionDatabase();
 export default db;
 
-function prepareDatabase(path = 'test.db') {
+function prepareDatabase(path = 'test.db'): Database.Database {
+  // In development mode, the database connection is renewed everytime which is not
+  // ideal. We check if there is already a database in the global scope and return
+  // it, otherwise we initialize the database.
+  if (global.db_) return global.db_;
+
   // Truncate the file to nothing.
-  closeSync(openSync(path, 'w'));
-  const db = Database(path);
+  if (path !== ':memory:') closeSync(openSync(path, 'w'));
+
+  const db = (global.db_ = Database(path));
   for (const path of [schemaPath, 'db/mock.sql']) {
     db.exec(readFileSync(path).toString());
   }
@@ -86,4 +92,8 @@ declare module 'iron-session' {
   interface IronSessionData {
     user?: UserSession | null;
   }
+}
+
+declare global {
+  var db_: Database.Database | undefined;
 }
