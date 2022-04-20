@@ -10,8 +10,12 @@ import AppHeader from '@/components/AppHeader';
 import useSwr from 'swr';
 import { useColorScheme } from '@mantine/hooks';
 import { AppFooter } from '@/components/AppFooter';
+import { UserSession } from '@/lib/types';
 
-const getJson = (endpoint: string) => fetch(endpoint).then((e) => e.json());
+function getJson(endpoint: '/api/_user'): Promise<UserSession | null>;
+function getJson(endpoint: string) {
+  return fetch(endpoint).then((e) => e.json());
+}
 
 interface InitialProps {
   colorScheme?: ColorScheme;

@@ -1,4 +1,4 @@
-import { Card, Text, Stack, Group, Image, Badge, Button } from '@mantine/core';
+import { Card, Text, Stack, Group } from '@mantine/core';
 
 export default function PaymentItem(props: any) {
   return (
