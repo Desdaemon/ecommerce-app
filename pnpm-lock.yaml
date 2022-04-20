@@ -22,7 +22,6 @@ specifiers:
   better-sqlite3: ^7.5.1
   change-case: ^4.1.2
   cookies-next: ^2.0.4
-  dayjs: ^1.11.1
   eslint: ^8.13.0
   eslint-config-airbnb: 19.0.4
   eslint-config-airbnb-typescript: ^16.2.0
@@ -56,7 +55,6 @@ dependencies:
   '@modulz/radix-icons': 4.0.0_react@18.0.0
   better-sqlite3: 7.5.1
   cookies-next: 2.0.4
-  dayjs: 1.11.1
   iron-session: 6.1.2_next@12.1.4
   next: 12.1.4_cba0cb7a45c5be1acc73e969c348db7f
   react: 18.0.0
@@ -5580,10 +5578,6 @@ packages:
       whatwg-mimetype: 2.3.0
       whatwg-url: 8.7.0
     dev: true
-
-  /dayjs/1.11.1:
-    resolution: {integrity: sha512-ER7EjqVAMkRRsxNCC5YqJ9d9VQYuWdGt7aiH2qA5R5wt8ZmWaP2dLUSIK6y/kVzLMlmh1Tvu5xUf4M/wdGJ5KA==}
-    dev: false
 
   /debug/2.6.9:
     resolution: {integrity: sha512-bC7ElrdJaJnPbAP+1EotYvqZsb3ecl5wi6Bfi6BJTUcNowp6cvspg0jXznRTKDjm/E7AdgFBVeAPVMNcKGsHMA==}
