@@ -9,13 +9,8 @@ import db, { HttpStatus, secureEndpoint } from '@/lib/server';
 //   `
 // );
 
-const upsertCart = (buyer_id: string, listing_id: string, qty?: number) =>
-  db.from('cart').upsert(
-    { buyer_id, listing_id, qty: qty ?? 1 },
-    {
-      onConflict: 'update set qty = qty + @qty',
-    }
-  );
+const upsertCart = (buyer: string, listing: string, qty?: number) =>
+  db.rpc('upsertCart', { buyer, listing, quantity: qty ?? 1 });
 
 // const removeCart = db.prepare<[string, string]>(
 //   `--sql

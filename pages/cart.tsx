@@ -35,10 +35,7 @@ const getListing = (buyerId: string) =>
     .eq('buyer_id', buyerId);
 
 export interface CartItem {
-  id: string;
   qty: number;
-  name: string;
-  price: number;
   listing: {
     id: string;
     name: string;
