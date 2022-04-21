@@ -15,24 +15,38 @@ export interface Item {
   date: string;
 }
 
-const listingStmt = db.prepare<[string]>(
-  `--sql
-  select C.qty, L.name, L.price, LI.url, C.date
-  from Purchase C
-  inner join Listing L
-  on
-    L.listing_id = C.listing_id
-  left outer join ListingImages LI
-  on
-    L.listing_id = LI.listing_id
-  where C.buyer_id = ?
-  order by date asc`
-);
+// const listingStmt = db.prepare<[string]>(
+//   `--sql
+//   select C.qty, L.name, L.price, LI.url, C.date
+//   from Purchase C
+//   inner join Listing L
+//   on
+//     L.listing_id = C.listing_id
+//   left outer join ListingImages LI
+//   on
+//     L.listing_id = LI.listing_id
+//   where C.buyer_id = ?
+//   order by date asc`
+// );
+
+const getListing = (buyerId: string) =>
+  db
+    .from('Purchase')
+    .select(
+      `qty, date,
+       Listing!inner(
+         name, price, ListingImages(url)
+       )`
+    )
+    .eq('buyer_id', buyerId)
+    .order('date', { ascending: true });
 
 export const getServerSideProps = secureSession<OrderPageProps>(async ({ req }) => {
   const user = req.session.user;
+  if (!user) return { props: { items: [] } };
+  const { data, error } = await getListing(user.userId);
   return {
-    props: { items: user ? listingStmt.all(user.userId) : [] },
+    props: { items: error ? [] : data },
   };
 });
 
