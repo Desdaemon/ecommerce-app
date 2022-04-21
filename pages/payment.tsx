@@ -15,7 +15,7 @@ import CreditCardForm from '@/components/CreditCardForm';
 // );
 
 // BuyerPayments is a Buyer-Payment join
-const getPayments = (buyerId: string) => db.from('BuyerPayments').select().eq('buyer_id', buyerId);
+const getPayments = (buyerId: string) => db.from('buyerpayments').select().eq('buyer_id', buyerId);
 
 interface PaymentPageProps extends PageProps {
   items: any[];

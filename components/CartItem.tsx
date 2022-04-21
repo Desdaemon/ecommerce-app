@@ -11,7 +11,13 @@ export default function CartListItem(props: CartItem) {
     <Card sx={{ maxWidth: 1080, width: '100%' }}>
       <Card.Section>
         <Group>
-          <Image height={120} width={120} fit="cover" src={props.url}></Image>
+          <Image
+            height={120}
+            width={120}
+            fit="cover"
+            src={props.listing.img[0].url}
+            withPlaceholder
+          ></Image>
           <Stack sx={{ padding: '12px 8px 12px 8px' }} align="flex-start" spacing="xs">
             <Text size="lg">{props.name}</Text>
             <Badge>in stock</Badge>

@@ -8,7 +8,7 @@ const buyNow = ({
   buyer_id: string;
   listing_id: string;
   qty?: number;
-}) => db.from('Purchase').insert({ buyer_id, listing_id, qty: qty ?? 1 });
+}) => db.from('purchase').insert({ buyer_id, listing_id, qty: qty ?? 1 });
 
 export default secureEndpoint(async (req, res) => {
   if (!(req.session.user && req.body.id)) {

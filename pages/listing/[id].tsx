@@ -32,11 +32,11 @@ interface ListingProps extends PageProps {
 
 const getListing = (listingId: string) =>
   db
-    .from('Listing')
+    .from('listing')
     .select(
       `name, description, price,
        id: listing_id,
-       img: ListingImages(link: url)`
+       img: listingimages(link: url)`
     )
     .eq('listing_id', listingId)
     .single();

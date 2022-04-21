@@ -9,7 +9,7 @@ import { Signup } from '@/lib/types';
 
 const signup = (username: string, email: string, password: string) =>
   db
-    .from('Buyer')
+    .from('buyer')
     .insert({ username, email, password })
     .select('userId: buyer_id, username')
     .single();

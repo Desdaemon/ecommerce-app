@@ -12,7 +12,7 @@ const addPayment = (payment: {
   card_no: string;
   expiry: string;
   cvc: string;
-}) => db.from('Payment').insert(payment);
+}) => db.from('payment').insert(payment);
 
 export default secureEndpoint(async (req, res) => {
   if (

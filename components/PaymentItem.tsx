@@ -15,7 +15,7 @@ export default function PaymentItem(props: any) {
           <Text size="sm">Expires {props.expiry}</Text>
         </Stack>
       </Group>
-      {props.isDefault ? (
+      {props.isdefault ? (
         <Badge>default</Badge>
       ) : (
         <Button variant="outline" color="green" onClick={makeDefault}>

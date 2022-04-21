@@ -10,7 +10,7 @@ import db, { HttpStatus, secureEndpoint } from '@/lib/server';
 // );
 
 const upsertCart = (buyer_id: string, listing_id: string, qty?: number) =>
-  db.from('Cart').upsert(
+  db.from('cart').upsert(
     { buyer_id, listing_id, qty: qty ?? 1 },
     {
       onConflict: 'update set qty = qty + @qty',
@@ -23,7 +23,7 @@ const upsertCart = (buyer_id: string, listing_id: string, qty?: number) =>
 // );
 
 const removeCart = (buyer_id: string, listing_id: string) =>
-  db.from('Cart').delete().eq('buyer_id', buyer_id).eq('listing_id', listing_id);
+  db.from('cart').delete().eq('buyer_id', buyer_id).eq('listing_id', listing_id);
 
 export default secureEndpoint(async (req, res) => {
   const user = req.session.user;

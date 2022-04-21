@@ -7,7 +7,7 @@ import db, { HttpStatus, secureEndpoint } from '@/lib/server';
 //   from Cart
 //   where buyer_id = ?`
 // );
-const buyStmt = (buyer_id: string) => db.rpc('buyCart', { buyer_id });
+const buyStmt = (buyer: string) => db.rpc('buyCart', { buyer });
 
 // const emptyStmt = db.prepare<[string]>(
 //   `--sql
@@ -21,8 +21,6 @@ export default secureEndpoint(async (req, res) => {
   }
   try {
     await buyStmt(req.session.user.userId);
-    // buyStmt(req.session.user.userId);
-    // emptyStmt.run(req.session.user.userId);
     return res.status(HttpStatus.noContent).end();
   } catch (err) {
     console.error(err);

@@ -10,7 +10,7 @@ import type { Login, UserSession } from '@/lib/types';
 /** These statements shoud return a {@link UserSession}. */
 const login = (identity: string, password: string) =>
   db
-    .from('Buyer')
+    .from('buyer')
     .select('userId: buyer_id, username')
     .or(`email.eq.${identity}, username.eq.${identity}`)
     .eq('password', password)
@@ -24,7 +24,7 @@ const login = (identity: string, password: string) =>
 
 const vendorLogin = (identity: string, password: string) =>
   db
-    .from('Vendor')
+    .from('vendor')
     .select('userId: vendor_id, username')
     .or(`email.eq.${identity}, username.eq.${identity}`)
     .eq('password', password)

@@ -6,7 +6,7 @@ import db, { HttpStatus, secureEndpoint } from '@/lib/server';
 // );
 
 const setDefaultPayment = (default_card_no: string, buyer_id: string) =>
-  db.from('Buyer').update({ default_card_no }).eq('buyer_id', buyer_id);
+  db.from('buyer').update({ default_card_no }).eq('buyer_id', buyer_id);
 
 export default secureEndpoint(async (req, res) => {
   if (!(req.session.user && req.body && req.body.cardNo)) {

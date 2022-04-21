@@ -2,7 +2,7 @@ import type { Item } from '@/pages/orders';
 import { Card, Text, Stack, Group, Image, Badge, Button } from '@mantine/core';
 
 function timeSince(date: string): string {
-  var seconds = Math.floor((new Date(date).valueOf() - Date.now()) / 1000);
+  var seconds = Math.floor(Math.abs(new Date(date).valueOf() - Date.now()) / 1000);
 
   var interval = seconds / 31536000;
 
@@ -33,9 +33,15 @@ export default function CartListItem(props: Item) {
     <Card sx={{ maxWidth: 1080, width: '100%' }}>
       <Card.Section>
         <Group>
-          <Image height={120} width={120} fit="cover" src={props.url}></Image>
+          <Image
+            height={120}
+            width={120}
+            fit="cover"
+            src={props.listing.img[0]?.url}
+            withPlaceholder
+          ></Image>
           <Stack sx={{ padding: '12px 8px 12px 8px' }} align="flex-start" spacing="xs">
-            <Text size="lg">{props.name}</Text>
+            <Text size="lg">{props.listing.name}</Text>
             <Badge>{timeSince(props.date)}</Badge>
             <Text size="sm">Qty: {props.qty}</Text>
           </Stack>

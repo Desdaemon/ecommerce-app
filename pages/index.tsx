@@ -26,10 +26,10 @@ const placeholder = 'https://upload.wikimedia.org/wikipedia/commons/8/89/Portrai
 //   .bind();
 
 const getHomepage = () =>
-  db.from('Listing').select(
-    `name, description, price
+  db.from('listing').select(
+    `name, description, price,
      id: listing_id,
-     img: ListingImages(link: url)`
+     img: listingimages(link: url)`
   );
 
 interface Listing {

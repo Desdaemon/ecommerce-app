@@ -8,14 +8,6 @@ interface CartPageProps extends PageProps {
   items: CartItem[];
 }
 
-export interface CartItem {
-  id: string;
-  qty: number;
-  name: string;
-  price: number;
-  url: string;
-}
-
 // const listingStmt = db.prepare<[string]>(
 //   `--sql
 //   select C.qty, L.name, L.price, LI.url,
@@ -31,13 +23,29 @@ export interface CartItem {
 // );
 const getListing = (buyerId: string) =>
   db
-    .from('Cart')
+    .from('cart')
     .select(
       `qty,
-       Listing!inner(name, price, id: listing_id),
-       ListingImages(url)`
+       listing!inner(
+        name, price,
+        id: listing_id,
+        img: listingimages(url)
+       )`
     )
     .eq('buyer_id', buyerId);
+
+export interface CartItem {
+  id: string;
+  qty: number;
+  name: string;
+  price: number;
+  listing: {
+    id: string;
+    name: string;
+    price: number;
+    img: { url: string }[];
+  };
+}
 
 export const getServerSideProps = secureSession<CartPageProps>(async ({ req }) => {
   const user = req.session.user;

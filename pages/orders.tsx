@@ -9,10 +9,12 @@ interface OrderPageProps extends PageProps {
 
 export interface Item {
   qty: number;
-  name: string;
-  price: number;
-  url: string;
   date: string;
+  listing: {
+    name: string;
+    price: number;
+    img: { url: string }[];
+  };
 }
 
 // const listingStmt = db.prepare<[string]>(
@@ -31,15 +33,16 @@ export interface Item {
 
 const getListing = (buyerId: string) =>
   db
-    .from('Purchase')
+    .from('purchase')
     .select(
       `qty, date,
-       Listing!inner(
-         name, price, ListingImages(url)
+       listing!inner(
+         name, price,
+         img: listingimages(url)
        )`
     )
     .eq('buyer_id', buyerId)
-    .order('date', { ascending: true });
+    .order('date', { ascending: false });
 
 export const getServerSideProps = secureSession<OrderPageProps>(async ({ req }) => {
   const user = req.session.user;
