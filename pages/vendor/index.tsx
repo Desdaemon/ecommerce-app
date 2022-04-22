@@ -1,19 +1,7 @@
-import RichTextEditor from '@/components/RichTextEditor';
 import VendorLayout from '@/components/VendorLayout';
 import db, { secureSession } from '@/lib/server';
-import {
-  ActionIcon,
-  Button,
-  Card,
-  Group,
-  Input,
-  Modal,
-  Table,
-  Text,
-  TextInput,
-} from '@mantine/core';
+import { ActionIcon, Button, Group, Modal, Table, TextInput } from '@mantine/core';
 import { useForm } from '@mantine/hooks';
-import { AnyTxtRecord } from 'dns';
 import { useEffect, useState } from 'react';
 import { Edit, Trash } from 'tabler-icons-react';
 
@@ -27,7 +15,6 @@ interface VendorListing {
     name: string;
     price: string;
     description: string;
-    // img: { url: string }[];
   };
 }
 
