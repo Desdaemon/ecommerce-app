@@ -28,6 +28,8 @@ create table Listing (
         on update cascade on delete cascade
 );
 
+-- Testing
+
 create table Payment (
     buyer_id integer not null,
     name varchar,
