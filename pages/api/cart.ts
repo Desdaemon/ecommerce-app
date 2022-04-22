@@ -1,18 +1,24 @@
 import db, { HttpStatus, secureEndpoint } from '@/lib/server';
 
-const upsertCart = db.prepare<{ buyerId: string; listingId: string; qty: number }>(
-  `--sql
-  insert into Cart (buyer_id, listing_id, qty)
-    values (@buyerId, @listingId, @qty)
-  on conflict (buyer_id, listing_id) do
-    update set qty = qty + @qty
-  `
-);
+// const upsertCart = db.prepare<{ buyerId: string; listingId: string; qty: number }>(
+//   `--sql
+//   insert into Cart (buyer_id, listing_id, qty)
+//     values (@buyerId, @listingId, @qty)
+//   on conflict (buyer_id, listing_id) do
+//     update set qty = qty + @qty
+//   `
+// );
 
-const removeCart = db.prepare<[string, string]>(
-  `--sql
-  delete from Cart where buyer_id = ? and listing_id = ?`
-);
+const upsertCart = (buyer: string, listing: string, qty?: number) =>
+  db.rpc('upsertCart', { buyer, listing, quantity: qty ?? 1 });
+
+// const removeCart = db.prepare<[string, string]>(
+//   `--sql
+//   delete from Cart where buyer_id = ? and listing_id = ?`
+// );
+
+const removeCart = (buyer_id: string, listing_id: string) =>
+  db.from('cart').delete().eq('buyer_id', buyer_id).eq('listing_id', listing_id);
 
 export default secureEndpoint(async (req, res) => {
   const user = req.session.user;
@@ -23,11 +29,11 @@ export default secureEndpoint(async (req, res) => {
   try {
     switch (req.method) {
       case 'POST':
-        upsertCart.run({ buyerId: user.userId, listingId: id, qty: qty ?? 1 });
+        await upsertCart(user.userId, id, qty);
         return res.status(HttpStatus.created).end();
 
       case 'DELETE':
-        removeCart.run(user.userId, id);
+        await removeCart(user.userId, id);
         return res.status(HttpStatus.noContent).end();
 
       default:

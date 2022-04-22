@@ -38,8 +38,8 @@ interface Flags {
 }
 
 export const { Provider: FlagsProvider, useContainer: useFlags } = createContainer(
-  (init?: boolean) => {
-    const [flags, setFlags] = useState<Flags>({});
+  (init: Flags = {}) => {
+    const [flags, setFlags] = useState<Flags>(init);
     return { flags, setFlags };
   }
 );

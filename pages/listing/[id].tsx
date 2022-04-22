@@ -4,54 +4,71 @@ import db from '@/lib/server';
 import { PageProps } from '@/lib/types';
 import { fetchJson, useFlags } from '@/lib/client';
 import { showNotification } from '@mantine/notifications';
-import Router, { useRouter } from 'next/router';
+import { useRouter } from 'next/router';
 
 export interface ListingInfo {
-  id: string;
   name: string;
   price: number;
   description: string;
-  link?: string;
+  id: string;
+  img: { link?: string }[];
 }
 
 interface ListingProps extends PageProps {
   info: ListingInfo;
 }
 
-const listingStmt = db.prepare<[listingId: string]>(
-  `--sql
-    select L.name, L.description, L.price,
-           LI.url as link,
-           L.listing_id as id
-    from Listing L
-    left outer join ListingImages LI
-    on
-      L.listing_id = LI.listing_id
-    where L.listing_id = ?`
-);
+// const listingStmt = db.prepare<[listingId: string]>(
+//   `--sql
+//     select L.name, L.description, L.price,
+//            LI.url as link,
+//            L.listing_id as id
+//     from Listing L
+//     left outer join ListingImages LI
+//     on
+//       L.listing_id = LI.listing_id
+//     where L.listing_id = ?`
+// );
 
-const listingIdsStmt = db
-  .prepare<[]>(
-    `--sql
-    select listing_id as id
-    from Listing`
-  )
-  .pluck();
+const getListing = (listingId: string) =>
+  db
+    .from('listing')
+    .select(
+      `name, description, price,
+       id: listing_id,
+       img: listingimages(link: url)`
+    )
+    .eq('listing_id', listingId)
+    .single();
+
+// const listingIdsStmt = db
+//   .prepare<[]>(
+//     `--sql
+//     select listing_id as id
+//     from Listing`
+//   )
+//   .pluck();
+
+async function getListingIds() {
+  const { data, error } = await db.from('Listing').select('id: listing_id');
+  if (error) return { error };
+  return { data: data.map((row) => row.id) };
+}
 
 export const getStaticProps: GetStaticProps<ListingProps> = async ({ params }) => {
   const listingId = params?.id;
   if (!listingId) return { notFound: true };
-  const row = listingStmt.get(listingId as string);
-  if (!row) return { notFound: true };
+  const { data, error } = await getListing(listingId as string);
+  if (error || !data) return { notFound: true };
   return {
-    props: { info: row },
+    props: { info: data },
   };
 };
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const rows = listingIdsStmt.all();
+  const { data, error } = await getListingIds();
   return {
-    paths: rows.map((row) => ({ params: { id: String(row) } })),
+    paths: error ? [] : data.map((row) => ({ params: { id: String(row) } })),
     fallback: 'blocking',
   };
 };
@@ -88,9 +105,9 @@ export default function Listing({ info, user }: ListingProps) {
   return (
     <Center>
       <Card shadow="md">
-        {info.link && (
+        {info.img[0].link && (
           <Card.Section>
-            <Image fit="cover" height={300} src={info.link} />
+            <Image fit="cover" height={300} src={info.img[0].link} />
           </Card.Section>
         )}
         <Stack align="flex-start">

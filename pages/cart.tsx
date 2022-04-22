@@ -8,33 +8,47 @@ interface CartPageProps extends PageProps {
   items: CartItem[];
 }
 
-export interface CartItem {
-  id: string;
-  qty: number;
-  name: string;
-  price: number;
-  url: string;
-}
+// const listingStmt = db.prepare<[string]>(
+//   `--sql
+//   select C.qty, L.name, L.price, LI.url,
+//          L.listing_id as id
+//   from Cart C
+//   inner join Listing L
+//   on
+//     L.listing_id = C.listing_id
+//   left outer join ListingImages LI
+//   on
+//     L.listing_id = LI.listing_id
+//   where C.buyer_id = ?`
+// );
+const getListing = (buyerId: string) =>
+  db
+    .from('cart')
+    .select(
+      `qty,
+       listing!inner(
+        name, price,
+        id: listing_id,
+        img: listingimages(url)
+       )`
+    )
+    .eq('buyer_id', buyerId);
 
-const listingStmt = db.prepare<[string]>(
-  `--sql
-  select C.qty, L.name, L.price, LI.url,
-         L.listing_id as id
-  from Cart C
-  inner join Listing L
-  on
-    L.listing_id = C.listing_id
-  left outer join ListingImages LI
-  on
-    L.listing_id = LI.listing_id
-  where C.buyer_id = ?`
-);
+export interface CartItem {
+  qty: number;
+  listing: {
+    id: string;
+    name: string;
+    price: number;
+    img: { url: string }[];
+  };
+}
 
 export const getServerSideProps = secureSession<CartPageProps>(async ({ req }) => {
   const user = req.session.user;
-  return {
-    props: { items: user ? listingStmt.all(user.userId) : [] },
-  };
+  if (!user) return { props: { items: [] } };
+  const { data, error } = await getListing(user.userId);
+  return { props: { items: error ? [] : data } };
 });
 
 export default function CartPage({ items, user }: CartPageProps) {

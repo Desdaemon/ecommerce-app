@@ -1,7 +1,7 @@
 /** Utilities for the server only. */
 
-import Database from 'better-sqlite3';
-import { openSync, readFileSync, closeSync, existsSync } from 'fs';
+// import Database from 'better-sqlite3';
+// import { openSync, closeSync, existsSync } from 'fs';
 import { withIronSessionApiRoute, withIronSessionSsr } from 'iron-session/next';
 import type {
   GetServerSideProps,
@@ -12,37 +12,49 @@ import type {
 import { UserSession } from './types';
 import { IronSessionOptions } from 'iron-session';
 import { assertTruthy } from './common';
-import schemaFile from '@/db/schema.sql';
-import mockFile from '@/db/mock.sql';
+// import schemaFile from '@/db/schema.sql';
+// import mockFile from '@/db/mock.sql';
+import { SupabaseClient, createClient } from '@supabase/supabase-js';
 
-// const schemaPath = process.env.SCHEMA || 'db/schema.sql';
+const supabaseUrl = assertTruthy(
+  process.env.NEXT_PUBLIC_SUPABASE_URL,
+  'Missing NEXT_PUBLIC_SUPABASE_URL in .env'
+);
+
+const supabaseAnon = assertTruthy(
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
+  'Missing NEXT_PUBLIC_SUPABASE_ANON_KEY in .env'
+);
+
 const db = process.env.NODE_ENV === 'development' ? prepareDatabase() : prepareProductionDatabase();
 export default db;
 
-function prepareDatabase(path = 'test.db'): Database.Database {
+function prepareDatabase(path = 'test.db'): SupabaseClient {
   // In development mode, the database connection is renewed everytime which is not
   // ideal. We check if there is already a database in the global scope and return
   // it, otherwise we initialize the database.
   if (global.db_) return global.db_;
 
   // Truncate the file to nothing.
-  if (path !== ':memory:') closeSync(openSync(path, 'w'));
+  // if (path !== ':memory:') closeSync(openSync(path, 'w'));
 
-  const db = (global.db_ = Database(path));
-  db.exec(schemaFile);
-  db.exec(mockFile);
-  return db;
+  // const db = (global.db_ = Database(path));
+  // const db = global.db_ =
+  // db.exec(schemaFile);
+  // db.exec(mockFile);
+  return (global.db_ = createClient(supabaseUrl, supabaseAnon));
 }
 
 function prepareProductionDatabase(path = 'database.db') {
-  const dbpath = process.env.DB || path;
-  const exists = dbpath !== ':memory:' && existsSync(dbpath);
-  const db = Database(dbpath);
-  if (!exists) {
-    db.exec(schemaFile);
-    db.exec(mockFile);
-  }
-  return db;
+  return createClient(supabaseUrl, supabaseAnon);
+  // const dbpath = process.env.DB || path;
+  // const exists = dbpath !== ':memory:' && existsSync(dbpath);
+  // const db = Database(dbpath);
+  // if (!exists) {
+  //   db.exec(schemaFile);
+  //   db.exec(mockFile);
+  // }
+  // return db;
 }
 
 /** Common HTTP status codes. */
@@ -97,5 +109,5 @@ declare module 'iron-session' {
 }
 
 declare global {
-  var db_: Database.Database | undefined;
+  var db_: SupabaseClient | undefined;
 }

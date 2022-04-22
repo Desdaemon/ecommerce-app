@@ -4,15 +4,18 @@ import { PageProps } from '@/lib/types';
 import { Center, Stack } from '@mantine/core';
 import CreditCardForm from '@/components/CreditCardForm';
 
-const payments = db.prepare<[string]>(
-  `--sql
-  select *, (P.card_no == B.default_card_no) as isDefault
-  from Payment P
-  inner join Buyer B
-  on
-    B.buyer_id = P.buyer_id
-  where P.buyer_id = ?`
-);
+// const payments = db.prepare<[string]>(
+//   `--sql
+//   select *, (P.card_no == B.default_card_no) as isDefault
+//   from Payment P
+//   inner join Buyer B
+//   on
+//     B.buyer_id = P.buyer_id
+//   where P.buyer_id = ?`
+// );
+
+// BuyerPayments is a Buyer-Payment join
+const getPayments = (buyerId: string) => db.from('buyerpayments').select().eq('buyer_id', buyerId);
 
 interface PaymentPageProps extends PageProps {
   items: any[];
@@ -21,7 +24,7 @@ interface PaymentPageProps extends PageProps {
 export const getServerSideProps = secureSession(async ({ req }) => {
   return {
     props: {
-      items: req.session.user ? payments.all(req.session.user.userId) ?? [] : [],
+      items: req.session.user ? (await getPayments(req.session.user.userId)).data ?? [] : [],
     },
   };
 });
