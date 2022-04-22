@@ -1,4 +1,4 @@
-import { TextInput, Button, Stack, InputWrapper } from '@mantine/core';
+import { TextInput, Button, Stack, InputWrapper, Checkbox } from '@mantine/core';
 import { useForm } from '@mantine/hooks';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
@@ -54,6 +54,7 @@ export default function LoginPage({ nextRoute }: LoginPageProps) {
       password: '',
       email: '',
       confirmPassword: '',
+      vendor: false,
     },
     validationRules: {
       identity: identity,
@@ -81,10 +82,13 @@ export default function LoginPage({ nextRoute }: LoginPageProps) {
     let err;
     switch (action) {
       case Action.login:
-        err = await login(values, { fetch });
+        err = await login(values, { fetch, asVendor: values.vendor });
         break;
       case Action.signUp:
-        err = await signup({ ...values, username: values.identity }, { fetch });
+        err = await signup(
+          { ...values, username: values.identity },
+          { fetch, asVendor: values.vendor }
+        );
         break;
     }
     if (err) {
@@ -124,6 +128,7 @@ export default function LoginPage({ nextRoute }: LoginPageProps) {
           </>
         )}
         <Stack sx={{ paddingTop: 12 }}>
+          <Checkbox {...form.getInputProps('vendor', { type: 'checkbox' })} label="I'm a vendor" />
           <Button type={newUser ? undefined : 'submit'} onClick={makeOnClick(Action.login)}>
             Login
           </Button>

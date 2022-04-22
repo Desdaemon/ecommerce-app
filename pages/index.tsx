@@ -42,6 +42,7 @@ interface Listing {
 
 export const getStaticProps: GetStaticProps = async () => {
   const { data, error } = await getHomepage();
+  if (error) console.error(error);
   return {
     props: { items: error ? [] : data },
     revalidate: 60, // seconds

@@ -86,8 +86,8 @@ export function secureEndpoint<T = any>(fn: (req: NextApiRequest, res: NextApiRe
   return withIronSessionApiRoute(fn, sessionOptions);
 }
 
-export function secureSession<T>(fn: GetServerSideProps<T>) {
-  return withIronSessionSsr(fn as any, sessionOptions);
+export function secureSession<T>(fn: GetServerSideProps<T>): GetServerSideProps<T> {
+  return withIronSessionSsr(fn as any, sessionOptions) as any;
 }
 
 export function redirectTo(

@@ -34,10 +34,10 @@ export default secureEndpoint(async (req, res) => {
   const { username, password, email } = req.body as Signup;
   const stmt = req.body.type == 'vendor' ? vendorSignup : signup;
   try {
-    const { data: userId } = await stmt(username, email, password);
-    if (!userId) return res.status(HttpStatus.badRequest).send('Failed to create user.');
+    const { data } = await stmt(username, email, password);
+    if (!data) return res.status(HttpStatus.badRequest).send('Failed to create user.');
 
-    req.session.user = userId;
+    req.session.user = { ...data, isVendor: req.query.type == 'vendor' };
     await req.session.save();
     return res.status(HttpStatus.created).end();
   } catch (err: unknown) {

@@ -21,13 +21,6 @@ interface InitialProps {
   colorScheme?: ColorScheme;
 }
 
-const headerLinks = [
-  { title: 'Home', url: '/' },
-  { title: 'Cart', url: '/cart' },
-  { title: 'Orders', url: '/orders' },
-  { title: 'Payment', url: '/payment' },
-];
-
 const footerLinks = [
   {
     title: 'Links',
@@ -39,8 +32,19 @@ export default function App(props: AppProps & InitialProps) {
   const { Component, pageProps } = props;
   const preferredColorScheme = useColorScheme();
   const [colorScheme, setColorScheme] = useState<ColorScheme>(props.colorScheme || 'light');
-  const { data, error } = useSwr('/api/_user', getJson);
-  const user = error || data || null;
+  const { data } = useSwr('/api/_user', getJson);
+  const user = data || null;
+
+  const headerLinks = [
+    { title: 'Home', url: '/' },
+    { title: 'Cart', url: '/cart' },
+    { title: 'Orders', url: '/orders' },
+    { title: 'Payment', url: '/payment' },
+  ];
+
+  if (user?.isVendor) {
+    headerLinks.push({ title: 'Vendor', url: '/vendor' });
+  }
 
   const toggleColorScheme = (value?: ColorScheme) => {
     const nextColorScheme = value || (colorScheme === 'dark' ? 'light' : 'dark');
