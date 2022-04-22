@@ -172,7 +172,12 @@ export default function AppHeader({ user, tabs }: HeaderTabsProps) {
 
                 <Menu.Label>Settings</Menu.Label>
                 <Menu.Item icon={<Settings size={14} />}>Account settings</Menu.Item>
-                <Menu.Item icon={<SwitchHorizontal size={14} />}>Change account</Menu.Item>
+                <Menu.Item
+                  icon={<SwitchHorizontal size={14} />}
+                  onClick={() => setFlags({ loginDialog: true })}
+                >
+                  Change account
+                </Menu.Item>
               </>
             )}
             {user ? (

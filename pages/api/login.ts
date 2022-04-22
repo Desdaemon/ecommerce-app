@@ -41,7 +41,7 @@ export default secureEndpoint(async (req, res) => {
   if (!cred) {
     return res.status(HttpStatus.unauthorized).send('Invalid username, email or password.');
   }
-  req.session.user = cred;
+  req.session.user = { ...cred, isVendor: req.query.type == 'vendor' };
   await req.session.save();
   return res.status(HttpStatus.ok).end();
 });

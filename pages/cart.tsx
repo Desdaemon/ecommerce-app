@@ -48,6 +48,7 @@ export const getServerSideProps = secureSession<CartPageProps>(async ({ req }) =
   const user = req.session.user;
   if (!user) return { props: { items: [] } };
   const { data, error } = await getListing(user.userId);
+  if (error) console.error(error);
   return { props: { items: error ? [] : data } };
 });
 

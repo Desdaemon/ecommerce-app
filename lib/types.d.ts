@@ -6,6 +6,7 @@ interface UserSession {
   userId: string;
   username: string;
   image?: string;
+  isVendor: boolean;
 }
 
 /** Props injected by _app.tsx */
